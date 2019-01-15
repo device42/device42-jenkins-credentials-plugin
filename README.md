@@ -66,7 +66,7 @@ The secrets that you want to obtain from Device42 must be defined explicitly. Us
 
 To bind to Device42 secrets, use the option "Use secret text(s) or file(s)" in the "Build Environment" section of a Freestyle project.
 
-![Secret bindings on Freestyle Project](docs/images/SecretBindingsOnFreestyle.png)
+![Secret bindings on Freestyle Project](docs/images/ExecutorNode.png)
 
 Secrets are injected as environment variables to the build steps of the project. 
 
@@ -75,6 +75,6 @@ Secrets are injected as environment variables to the build steps of the project.
 
 To bind to Device42 secrets, use the option "Launch agent agents via SSH" in the "Build Environment" section of a Add Node .
 
-![Secret bindings on Freestyle Project](docs/images/ExecutorNode.png)
+![Secret bindings on Freestyle Project](docs/images/SecretBindingsOnFreestyle.png)
 
 
