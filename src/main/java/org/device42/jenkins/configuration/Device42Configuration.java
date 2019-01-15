@@ -1,0 +1,119 @@
+package org.device42.jenkins.configuration;
+
+import java.io.Serializable;
+
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.AncestorInPath;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
+
+import com.cloudbees.plugins.credentials.common.StandardCertificateCredentials;
+import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
+import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
+import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder;
+
+import hudson.Extension;
+import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
+import hudson.model.Item;
+import hudson.security.ACL;
+import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
+
+public class Device42Configuration extends AbstractDescribableImpl<Device42Configuration> implements Serializable {
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
+	private String applianceURL;
+    private String account;
+    private String credentialID;
+    private String certificateCredentialID;
+    
+    public Device42Configuration() {	
+    }
+    
+    @DataBoundConstructor
+    public Device42Configuration(String applianceURL, String account) {
+        this.applianceURL = applianceURL;
+        this.account = account;
+    }
+
+    /** @return the currently appliance URL, if any */
+    public String getApplianceURL() {
+        return applianceURL;
+    }
+
+    /** @return the currently configured Account, if any */
+    public String getAccount() {
+        return account;
+    }
+
+    /**
+     * Together with {@link #getApplianceURL}, binds to entry in {@code config.jelly}.
+     * @param applianceURL the new value of Device42 Appliance URL
+     */
+    @DataBoundSetter
+    public void setApplianceURL(String applianceURL) {
+        this.applianceURL = applianceURL;
+    }
+    
+    /**
+     * Together with {@link #getAccount}, binds to entry in {@code config.jelly}.
+     * @param account the new value of Device42 account
+     */
+    @DataBoundSetter
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    
+    public FormValidation doCheckAccount(@QueryParameter String value) {
+        if (StringUtils.isEmpty(value)) {
+            return FormValidation.warning("Please specify Account.");
+        }
+        return FormValidation.ok();
+    }
+
+    public String getCredentialID() {
+		return credentialID;
+	}
+
+    @DataBoundSetter
+	public void setCredentialID(String credentialID) {
+		this.credentialID = credentialID;
+	}
+
+	public String getCertificateCredentialID() {
+		return certificateCredentialID;
+	}
+
+    @DataBoundSetter
+	public void setCertificateCredentialID(String certificateCredentialID) {
+		this.certificateCredentialID = certificateCredentialID;
+	}
+
+	@Extension
+    public static class DescriptorImpl extends Descriptor<Device42Configuration> {
+        @Override
+        public String getDisplayName() {
+            return "Device42 Configuration";
+        }
+        
+        public ListBoxModel doFillCredentialIDItems(@AncestorInPath Item item, @QueryParameter String uri) {
+        	return new StandardListBoxModel().includeEmptyValue().includeAs(ACL.SYSTEM, item, StandardUsernamePasswordCredentials.class, URIRequirementBuilder.fromUri(uri).build());
+        }
+
+        public ListBoxModel doFillCertificateCredentialIDItems(@AncestorInPath Item item, @QueryParameter String uri) {
+        	return new StandardListBoxModel().includeEmptyValue().includeAs(ACL.SYSTEM, item, StandardCertificateCredentials.class, URIRequirementBuilder.fromUri(uri).build());
+        }
+        
+    }
+    
+    
+
+}
